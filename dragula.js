@@ -429,7 +429,7 @@ function dragula (initialContainers, options) {
     _mirror.style.height = getRectHeight(rect) + 'px';
     classes.rm(_mirror, 'gu-transit');
     classes.add(_mirror, 'gu-mirror');
-
+    var _existingMirror = document.querySelector('.gu-mirror');
     if(_existingMirror === null)
     {
         o.mirrorContainer.append(_mirror);
