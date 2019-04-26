@@ -429,12 +429,20 @@ function dragula (initialContainers, options) {
     _mirror.style.height = getRectHeight(rect) + 'px';
     classes.rm(_mirror, 'gu-transit');
     classes.add(_mirror, 'gu-mirror');
+
     if(_existingMirror === null)
     {
         o.mirrorContainer.append(_mirror);
         touchy(documentElement, 'add', 'mousemove', drag);
         classes.add(o.mirrorContainer, 'gu-unselectable');
         drake.emit('cloned', _mirror, _item, 'mirror');
+        // Canvas Support
+        var mirrorCanvases = _mirror.querySelectorAll('canvas');
+        if(!mirrorCanvases.length) { return; }
+        _item.querySelectorAll('canvas').forEach(function(sourceCanvas, idx) {
+          var mirrorContext = mirrorCanvases[idx].getContext('2d');
+          mirrorContext.drawImage(sourceCanvas, 0, 0);
+        });
     }
   }
 
