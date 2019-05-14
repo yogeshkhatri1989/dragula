@@ -65,19 +65,19 @@ function dragula (initialContainers, options) {
 
   function events (remove) {
     var op = remove ? 'remove' : 'add';
-    touchy(documentElement, op, 'mousedown', grab);
-    touchy(documentElement, op, 'mouseup', release);
+    touchy(documentElement, op, 'mousedown', grab, o.capturing);
+    touchy(documentElement, op, 'mouseup', release, o.capturing);
   }
 
   function eventualMovements (remove) {
     var op = remove ? 'remove' : 'add';
-    touchy(documentElement, op, 'mousemove', startBecauseMouseMoved);
+    touchy(documentElement, op, 'mousemove', startBecauseMouseMoved, o.capturing);
   }
 
   function movements (remove) {
     var op = remove ? 'remove' : 'add';
-    crossvent[op](documentElement, 'selectstart', preventGrabbed); // IE8
-    crossvent[op](documentElement, 'click', preventGrabbed);
+    crossvent[op](documentElement, 'selectstart', preventGrabbed, o.capturing); // IE8
+    crossvent[op](documentElement, 'click', preventGrabbed, o.capturing);
   }
 
   function destroy () {
@@ -503,7 +503,7 @@ function dragula (initialContainers, options) {
   }
 }
 
-function touchy (el, op, type, fn) {
+function touchy (el, op, type, fn, capturing) {
   var touch = {
     mouseup: 'touchend',
     mousedown: 'touchstart',
@@ -520,12 +520,12 @@ function touchy (el, op, type, fn) {
     mousemove: 'MSPointerMove'
   };
   if (global.navigator.pointerEnabled) {
-    crossvent[op](el, pointers[type], fn);
+    crossvent[op](el, pointers[type], fn, capturing);
   } else if (global.navigator.msPointerEnabled) {
-    crossvent[op](el, microsoft[type], fn);
+    crossvent[op](el, microsoft[type], fn, capturing);
   } else {
-    crossvent[op](el, touch[type], fn);
-    crossvent[op](el, type, fn);
+    crossvent[op](el, touch[type], fn, capturing);
+    crossvent[op](el, type, fn, capturing);
   }
 }
 
